@@ -3,6 +3,8 @@ import { fpostLogin } from "../../../api/rest";
 
 import useSession from "../../../state/session.js";
 
+import "../App/App.css";
+
 const Login = () => {
   const setLogin = useSession((state) => state.setLogin);
   const [username, setUsername] = useState("");
@@ -31,7 +33,7 @@ const Login = () => {
   );
 
   return (
-    <>
+    <div id="page-login">
       <h1 className="mb-10 text-purple-300">
         tic-tac-ohno <br />
       </h1>
@@ -60,7 +62,7 @@ const Login = () => {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 
