@@ -51,8 +51,29 @@ const Users = {
         const res = await pool.query(USERS.DELETE, [id]);
         console.log(JSON.stringify(res));
         return true;
-    }
+    },
 
+    /**
+     * SPECIAL
+     */
+
+    login: async(pool, username) => {
+        console.log(`login: ${username}`);
+        let user;
+        const exists = await Users.exists(pool, username);
+        console.log(`login: exists:${username}: ${exists}`);
+
+        if (exists) {
+            console.log(`login: get:${username}`);
+            user = await Users.get(pool, { username });
+            console.log(user);
+            return user;
+        }
+
+        console.log(`login: insert:${username}`);
+        user = await Users.insert(pool, username);
+        return user;
+    }
 }
 
-export default Users;
+module.exports = Users;

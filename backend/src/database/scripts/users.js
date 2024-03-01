@@ -42,7 +42,7 @@ const LIST_W_LIMIT = `
 const INSERT = `
     INSERT INTO users (username)
     VALUES ($1)
-    return id;
+    RETURNING id;
 `;
 
 const UPDATE = `
@@ -69,7 +69,7 @@ const DELETE = `
 `;
 
 
-export default {
+module.exports = {
     EXISTS,
     GET,
     GET_BY_USERNAME,

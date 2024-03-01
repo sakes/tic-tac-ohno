@@ -85,4 +85,4 @@ const UserSummary = {
 
 }
 
-export default UserSummary;
+module.exports = UserSummary;

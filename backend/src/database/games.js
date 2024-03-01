@@ -78,4 +78,4 @@ const Games = {
 
 }
 
-export default Games;
+module.exports = Games;

@@ -128,7 +128,7 @@ const LIST_OPEN_GAMES_W_LIMIT = `
 const INSERT = `
     INSERT INTO games (owner_user_id)
     VALUES ($1)
-    return id;
+    RETURNING id;
 `;
 
 const UPDATE = `
@@ -182,7 +182,7 @@ const DELETE = `
 `;
 
 
-export default {
+module.exports = {
     EXISTS,
     GET,
     GET_MY_CURRENT_GAME,

@@ -54,7 +54,7 @@ const LIST_W_LIMIT = `
 const INSERT = `
     INSERT INTO user_summary (user_id, wins, losses, ties)
     VALUES ($1, $2, $3, $4)
-    return id;
+    RETURNING id;
 `;
 
 const UPDATE = `
@@ -129,7 +129,7 @@ const DELETE = `
 `;
 
 
-export default {
+module.exports = {
     EXISTS,
     GET,
     GET_BY_USERNAME,
