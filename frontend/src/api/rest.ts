@@ -14,6 +14,6 @@ export const fpostLogin = async (username: string): Promise<string> => {
         body: JSON.stringify({ username })
     };
     const res = await fetch(url, config);
-    const { message } = await res.json();
-    return message;
+    const user = await res.json();
+    return user;
 }

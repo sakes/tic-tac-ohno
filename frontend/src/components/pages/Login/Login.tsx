@@ -1,7 +1,10 @@
 import { useState, useCallback } from "react";
 import { fpostLogin } from "../../../api/rest";
 
+import useSession from "../../../state/session.js";
+
 const Login = () => {
+  const setLogin = useSession((state) => state.setLogin);
   const [username, setUsername] = useState("");
 
   const handleUsernameChange = useCallback(
@@ -16,8 +19,9 @@ const Login = () => {
       e.preventDefault();
       if (username && username.length > 0) {
         const fnLogin = async () => {
-          const res = await fpostLogin(username);
-          console.log(res);
+          const user = await fpostLogin(username);
+          console.log(user);
+          setLogin(user);
         };
         console.log("SUBMIT");
         fnLogin();
