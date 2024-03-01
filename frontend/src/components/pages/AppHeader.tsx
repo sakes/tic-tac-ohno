@@ -3,7 +3,10 @@ import useSession from "../../state/session";
 import { useCallback } from "react";
 
 const AppHeader = () => {
-  const setLogout = useSession((state) => state.setLogout);
+  const { setLogout, username } = useSession((state) => ({
+    setLogout: state.setLogout,
+    username: state.user?.username || "",
+  }));
 
   const handleLogout = useCallback(() => {
     setLogout();
@@ -17,7 +20,7 @@ const AppHeader = () => {
         </h1>
         <div className="flex-auto"></div>
         <UserCircleIcon className="flex-none h-8 w-8 mr-2 self-center" />
-        <h1 className="flex-none text-[1.5em] self-center mr-5">AAA</h1>
+        <h1 className="flex-none text-[1.5em] self-center mr-7">{username}</h1>
         <div className="flex-none">
           <button
             type="button"

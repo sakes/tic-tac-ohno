@@ -13,16 +13,16 @@ function App() {
       <AppHeader />
       <AppBody id="page-app">
         <div className="w-full flex">
-          <div className="flex-1 bg-red-500">
+          <div className="flex-1">
             <LeaderBoards />
           </div>
-          <div className="flex-none bg-blue-500 w-[400px]">
+          <div className="flex-none bg-blue-500 bg-opacity-10 w-[400px] ml-7 text-center p-20">
             <UserSummary />
           </div>
         </div>
         <br />
         <div className="w-full flex">
-          <div className="flex-1 bg-green-500">
+          <div className="flex-1 ">
             <Games />
           </div>
         </div>
