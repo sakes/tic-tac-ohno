@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import io from "socket.io-client";
 
-import urls from "./api/urls";
+import urls from "../../../api/urls";
 
-import CheckRestApi from "./components/CheckRestApi";
+import CheckRestApi from "../../CheckRestApi";
 
 import "./App.css";
 
