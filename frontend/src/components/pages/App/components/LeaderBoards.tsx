@@ -10,22 +10,25 @@ const Row = ({ idx, userSummary }) => {
   }, userSummary);
   return (
     <tr>
-      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {idx + 1}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
         {userSummary?.username}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden md:table-cell lg:hidden px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+        {userSummary?.wins} / {userSummary?.losses} / {userSummary?.ties}
+      </td>
+      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {userSummary?.wins}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {userSummary?.losses}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {userSummary?.ties}
       </td>
-      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {lastSeen}
       </td>
     </tr>
@@ -49,7 +52,7 @@ const LeaderBoards = () => {
                   <tr>
                     <th
                       scope="col"
-                      className="hidden md:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden lg:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Rank
                     </th>
@@ -61,25 +64,31 @@ const LeaderBoards = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden md:table-cell lg:hidden px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                    >
+                      W L T
+                    </th>
+                    <th
+                      scope="col"
+                      className="hidden lg:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Wins
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden lg:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Losses
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden lg:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Ties
                     </th>
                     <th
                       scope="col"
-                      className="hidden md:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden lg:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Last Seen
                     </th>

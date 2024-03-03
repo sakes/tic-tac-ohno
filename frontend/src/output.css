@@ -1132,6 +1132,25 @@ video {
   }
 }
 
+@media (min-width: 1024px) {
+  .lg\:block {
+    display: block;
+  }
+
+  .lg\:table-cell {
+    display: table-cell;
+  }
+
+  .lg\:hidden {
+    display: none;
+  }
+
+  .lg\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
 .peer:focus ~ .rtl\:peer-focus\:left-auto:where([dir="rtl"], [dir="rtl"] *) {
   left: auto;
 }
