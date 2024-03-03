@@ -39,7 +39,7 @@ const LIST = `
     INNER JOIN users u
     ON (us.user_id = u.id)
 
-    ORDER BY us.wins DESC, us.created_date
+    ORDER BY us.wins DESC, us.created_date ASC
 `;
 
 const LIST_W_LIMIT = `

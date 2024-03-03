@@ -19,8 +19,10 @@ const AppHeader = () => {
           tic-tac-ohno
         </h1>
         <div className="flex-auto"></div>
-        <UserCircleIcon className="flex-none h-8 w-8 mr-2 self-center" />
-        <h1 className="flex-none text-[1.5em] self-center mr-7">{username}</h1>
+        <UserCircleIcon className="hidden md:block flex-none h-8 w-8 mr-2 self-center" />
+        <h1 className="hidden md:block flex-none text-[1.5em] self-center mr-7">
+          {username}
+        </h1>
         <div className="flex-none">
           <button
             type="button"

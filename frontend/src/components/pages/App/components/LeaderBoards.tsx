@@ -10,7 +10,7 @@ const Row = ({ idx, userSummary }) => {
   }, userSummary);
   return (
     <tr>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {idx + 1}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -25,7 +25,7 @@ const Row = ({ idx, userSummary }) => {
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {userSummary?.ties}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
         {lastSeen}
       </td>
     </tr>
@@ -35,8 +35,8 @@ const Row = ({ idx, userSummary }) => {
 const LeaderBoards = () => {
   const leaderboards = useDashboard((state) => state.leaderboards || []);
   return (
-    <>
-      <h1 className="text-green-200 text-[2em] text-opacity-50 mb-5">
+    <div className="hidden md:block">
+      <h1 className=" text-purple-300 text-[2em] text-opacity-75 mb-5">
         The Best Around
       </h1>
 
@@ -49,7 +49,7 @@ const LeaderBoards = () => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden md:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Rank
                     </th>
@@ -79,7 +79,7 @@ const LeaderBoards = () => {
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                      className="hidden md:table-cell px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
                     >
                       Last Seen
                     </th>
@@ -95,7 +95,7 @@ const LeaderBoards = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
