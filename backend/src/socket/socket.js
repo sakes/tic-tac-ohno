@@ -2,18 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require("socket.io");
-
 const { Pool } = require('pg');
+
+const attachUser = require('./user');
+const attachGames = require('./games');
+const attachLeaderboards = require('./leaderboards');
 
 const PORT = process.env.WS_PORT || 3002;
 
+// 192.168.1.250
 const createWsServer = () => {
     const app = express();
     app.use(cors());
     const server = http.createServer(app);
     const io = new Server(server, {
         cors: {
-          origins: ["http://192.168.1.250:8080", "http://localhost:8080"], 
+          origins: ["http://192.168.58.120:8080", "http://localhost:8080"], 
           methods: ["GET", "POST"]
         }
       });
@@ -26,14 +30,10 @@ const createWsServer = () => {
         socket.on('disconnect', () => {
           console.log('User disconnected');
         });
-      
-        socket.on('message', async (msg) => {
-          console.log('Message received:', msg);
-          // Echo the message back
-          const data = await pool.query('select txt from hello_world');
-          console.log(JSON.stringify(data));
-          io.emit('message', 'Message received: ' + data.rows[0]?.txt || ' no data');
-        });
+
+        attachUser(io, socket, pool);
+        attachGames(io, socket, pool);
+        attachLeaderboards(io, socket, pool);
       });      
     
       server.listen(PORT, () => {

@@ -1,4 +1,5 @@
 const USERS = require('./scripts/users');
+const UserSummary = require('./userSummary');
 
 const Users = {
     /**
@@ -72,6 +73,7 @@ const Users = {
 
         console.log(`login: insert:${username}`);
         user = await Users.insert(pool, username);
+        await UserSummary.insert(pool, username);
         return user;
     }
 }

@@ -52,8 +52,16 @@ const LIST_W_LIMIT = `
  */
 
 const INSERT = `
-    INSERT INTO user_summary (user_id, wins, losses, ties)
+    INSERT INTO user_summary (user_id)
     VALUES ($1, $2, $3, $4)
+    RETURNING id;
+`;
+
+const INSERT_BY_USERNAME = `
+    INSERT INTO user_summary (user_id)
+    SELECT id
+    FROM users
+    WHERE username = $1
     RETURNING id;
 `;
 
@@ -137,6 +145,7 @@ module.exports = {
     LIST_W_LIMIT,
     
     INSERT,
+    INSERT_BY_USERNAME,
     UPDATE,
     UPDATE_BY_USERNAME,
 

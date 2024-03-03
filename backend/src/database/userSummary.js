@@ -34,7 +34,7 @@ const UserSummary = {
      * WRITE
      */
     insert: async (pool, username) => {
-        const res = await pool.query(USER_SUMMARY.INSERT, [username]);
+        const res = await pool.query(USER_SUMMARY.INSERT_BY_USERNAME, [username]);
         console.log(JSON.stringify(res));
         return {
             id: res.rows[0].id,
