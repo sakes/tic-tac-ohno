@@ -8,7 +8,7 @@ const attachLeaderboards = (io, socket, pool) => {
     socket.on(LEADERBOARDS.LIST, async (userId) => {
         if (userId) {
             const data = await UserSummary.listTop5(pool);
-            io.to(mkUserRoom(userId)).emit(LEADERBOARDS.LIST, data.rows);
+            io.to(mkUserRoom(userId)).emit(LEADERBOARDS.LIST, data);
         }
     });
 

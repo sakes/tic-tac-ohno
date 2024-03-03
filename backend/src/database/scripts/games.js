@@ -92,7 +92,7 @@ const LIST = `
 
 const LIST_W_LIMIT = `
     ${LIST}
-    LIMIT = $1;
+    LIMIT $1;
 `;
 
 const LIST_OPEN_GAMES = `
@@ -118,7 +118,7 @@ const LIST_OPEN_GAMES = `
 
 const LIST_OPEN_GAMES_W_LIMIT = `
     ${LIST_OPEN_GAMES}
-    LIMIT = $1;
+    LIMIT $1;
 `;
 
 /**

@@ -32,7 +32,7 @@ const LIST = `
 
 const LIST_W_LIMIT = `
     ${LIST}
-    LIMIT = $1
+    LIMIT $1
 `;
 
 /**

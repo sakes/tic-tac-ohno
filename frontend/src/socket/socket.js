@@ -7,7 +7,6 @@ import useDashboard from "../state/dashboard";
 
 class Socket {
     constructor() {
-        debugger;
         this.open();
     }
 
@@ -16,7 +15,6 @@ class Socket {
             this.s = io(urls.ws);
             this.isOpen = true;
             this.attachEvents();
-            debugger;
         }
     }
 
@@ -26,8 +24,14 @@ class Socket {
             this.s.disconnect();
             this.s = undefined;
             this.isOpen = false;
-            debugger;
         }
+    }
+
+    bootstrap() {
+        this.open();
+        this.registerUser();
+        this.getUserSummary();
+        this.getLeaderboards();    
     }
 
     throwErrorMissingSocket() {
@@ -44,7 +48,6 @@ class Socket {
         if (!userId) {
             throw new Error('Socket Singleton Error: attempted to register user when no user is logged in.')
         }
-        debugger;
         this.s.emit(ACTIONS.USER.REGISTER, userId);
     }
 
@@ -54,7 +57,6 @@ class Socket {
         if (!userId) {
             throw new Error('Socket Singleton Error: attempted to unregister user when no user is logged in.')
         }
-        debugger;
         this.s.emit(ACTIONS.USER.UNREGISTER, userId);
     }
 
@@ -65,7 +67,6 @@ class Socket {
         if (!userId) {
             throw new Error('Socket Singleton Error: attempted to unregister user when no user is logged in.')
         }
-        debugger;
         this.s.emit(ACTIONS.USER.GET_SUMMARY, userId);
     }
 
@@ -93,18 +94,27 @@ class Socket {
     }
 
 
+    // LEADERBOARD ACTIONS
+    getLeaderboards() {
+        this.throwErrorMissingSocket();
+        const userId = useSession.getState().user?.id;
+        if (!userId) {
+            throw new Error('Socket Singleton Error: attempting to request leaderboard data without user id.')
+        }
+        this.s.emit(ACTIONS.LEADERBOARDS.LIST, userId);
+    }
+
     // SOCKET EVENT HANDLERS
     attachUserEvents() {
         this.s.on(ACTIONS.USER.GET_SUMMARY, (summary) => {
-            console.log('SUMMARY');
-            console.log(summary);
-            debugger;
             useDashboard.getState().setUserSummary(summary);
         })
     }
 
     attachLeaderboardEvents() {
         this.s.on(ACTIONS.LEADERBOARDS.LIST, (rows) => {
+            console.log('leaderboard');
+            console.log(rows);
             debugger;
             useDashboard.getState().setLeaderboards(rows);
         })
@@ -112,7 +122,6 @@ class Socket {
 
     attachGameEvents() {
         this.s.on(ACTIONS.GAMES.LIST, (rows) => {
-            debugger;
             useDashboard.getState().setGames(rows);
         })
     }

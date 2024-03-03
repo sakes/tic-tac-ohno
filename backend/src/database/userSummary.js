@@ -19,14 +19,19 @@ const UserSummary = {
     },
 
     list: async (pool, limit = 10) => {
-        const script = limit ? USER_SUMMARY.LIST_W_LIMIT : USER_SUMMARY.LIST;
-        const params = limit ? [limit] : [];
+        console.log('user summary list', limit);
+        const script = !!limit ? USER_SUMMARY.LIST_W_LIMIT : USER_SUMMARY.LIST;
+        const params = !!limit ? [limit] : [];
+        console.log(script);
+        console.log(params);
         const res = await pool.query(script, params);
+        console.log('hereeeee')
         const user_summaries = res.rows;
         return user_summaries;
     },
 
     listTop5: async (pool) => {
+        console.log('list top 5', !!pool);
         return UserSummary.list(pool, 5);
     },
 

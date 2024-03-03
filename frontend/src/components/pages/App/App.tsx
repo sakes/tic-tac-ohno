@@ -10,9 +10,7 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    SOCKET.open();
-    SOCKET.registerUser();
-    SOCKET.getUserSummary();
+    SOCKET.bootstrap();
 
     return () => {
       SOCKET.close();

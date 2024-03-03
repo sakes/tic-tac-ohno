@@ -33,18 +33,18 @@ const GET_BY_USERNAME = `
 `;
 
 const LIST = `
-    SELECT us.id, us.user_id, us.wins, us.losses, us.ties
+    SELECT us.id, us.user_id, u.username, us.wins, us.losses, us.ties, us.updated_date
     FROM user_summary us
 
-    INNER JOIN user u
+    INNER JOIN users u
     ON (us.user_id = u.id)
 
-    ORDER BY us.wins DESC
+    ORDER BY us.wins DESC, us.created_date
 `;
 
 const LIST_W_LIMIT = `
     ${LIST}
-    LIMIT = $1
+    LIMIT $1
 `;
 
 /**
