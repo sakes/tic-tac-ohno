@@ -113,9 +113,6 @@ class Socket {
 
     attachLeaderboardEvents() {
         this.s.on(ACTIONS.LEADERBOARDS.LIST, (rows) => {
-            console.log('leaderboard');
-            console.log(rows);
-            debugger;
             useDashboard.getState().setLeaderboards(rows);
         })
     }

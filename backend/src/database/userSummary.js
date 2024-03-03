@@ -19,19 +19,14 @@ const UserSummary = {
     },
 
     list: async (pool, limit = 10) => {
-        console.log('user summary list', limit);
         const script = !!limit ? USER_SUMMARY.LIST_W_LIMIT : USER_SUMMARY.LIST;
         const params = !!limit ? [limit] : [];
-        console.log(script);
-        console.log(params);
         const res = await pool.query(script, params);
-        console.log('hereeeee')
         const user_summaries = res.rows;
         return user_summaries;
     },
 
     listTop5: async (pool) => {
-        console.log('list top 5', !!pool);
         return UserSummary.list(pool, 5);
     },
 
@@ -40,7 +35,6 @@ const UserSummary = {
      */
     insert: async (pool, username) => {
         const res = await pool.query(USER_SUMMARY.INSERT_BY_USERNAME, [username]);
-        console.log(JSON.stringify(res));
         return {
             id: res.rows[0].id,
             username
@@ -49,7 +43,6 @@ const UserSummary = {
 
     update: async (pool, { id, username }) => {
         const res = await pool.query(USER_SUMMARY.UPDATE, [id, username]);
-        console.log(JSON.stringify(res));
         return true;
     },
 
@@ -84,7 +77,6 @@ const UserSummary = {
      */
     delete: async (pool, { id }) => {
         const res = await pool.query(USER_SUMMARY.DELETE, [id]);
-        console.log(JSON.stringify(res));
         return true;
     }
 

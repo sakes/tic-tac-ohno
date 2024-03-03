@@ -22,10 +22,8 @@ const Login = () => {
       if (username && username.length > 0) {
         const fnLogin = async () => {
           const user = await fpostLogin(username);
-          console.log(user);
           setLogin(user);
         };
-        console.log("SUBMIT");
         fnLogin();
       }
     },

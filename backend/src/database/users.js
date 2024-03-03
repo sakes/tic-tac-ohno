@@ -32,7 +32,6 @@ const Users = {
      */
     insert: async (pool, username) => {
         const res = await pool.query(USERS.INSERT, [username]);
-        console.log(JSON.stringify(res));
         return {
             id: res.rows[0].id,
             username
@@ -41,7 +40,6 @@ const Users = {
 
     update: async (pool, { id, username }) => {
         const res = await pool.query(USERS.UPDATE, [id, username]);
-        console.log(JSON.stringify(res));
         return true;
     },
 
@@ -50,7 +48,6 @@ const Users = {
      */
     delete: async (pool, { id }) => {
         const res = await pool.query(USERS.DELETE, [id]);
-        console.log(JSON.stringify(res));
         return true;
     },
 
