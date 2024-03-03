@@ -5,12 +5,12 @@ import Games from "./Games/Games";
 function Dashboard() {
   return (
     <>
-      <div className="w-full flex">
+      <div className="w-full flex mt-8">
+        <div className="flex-none mr-16">
+          <UserSummary />
+        </div>
         <div className="flex-1">
           <LeaderBoards />
-        </div>
-        <div className="flex-none bg-blue-500 bg-opacity-10 w-[400px] ml-7 text-center p-20">
-          <UserSummary />
         </div>
       </div>
       <br />
