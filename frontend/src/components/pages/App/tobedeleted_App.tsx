@@ -7,26 +7,25 @@ import CheckRestApi from "../../CheckRestApi";
 
 import "./App.css";
 
-const socket = io(urls.ws);
+// const socket = io(urls.ws);
 
 function App() {
   const [message, setMessage] = useState(null);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    socket.on("message", (msg) => {
-      console.log("heeeer");
-      setMessage(msg);
-    });
-
-    return () => {
-      socket.off("message");
-    };
+    // socket.on("message", (msg) => {
+    //   console.log("heeeer");
+    //   setMessage(msg);
+    // });
+    // return () => {
+    //   socket.off("message");
+    // };
   }, []);
 
   const sendMessage = useCallback(() => {
-    console.log("send message via ws");
-    socket.emit("message", "from da client mon");
+    // console.log("send message via ws");
+    // socket.emit("message", "from da client mon");
   }, []);
 
   return (
