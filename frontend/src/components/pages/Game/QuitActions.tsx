@@ -2,7 +2,7 @@ import { useCallback } from "react";
 
 import SOCKET from "../../../socket/socket";
 
-const GameQuitActions = () => {
+const QuitActions = () => {
   const handleForfit = useCallback((e) => {
     e.preventDefault();
     SOCKET.forfitGame();
@@ -71,4 +71,4 @@ const GameQuitActions = () => {
   );
 };
 
-export default GameQuitActions;
+export default QuitActions;

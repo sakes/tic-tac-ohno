@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import GameHeaderStatus from "./GameHeaderStatus";
-import GameQuitActions from "./GameQuitActions";
+import HeaderStatus from "./HeaderStatus";
+import QuitActions from "./QuitActions";
 
 // import useGame from "../../../state/game";
 // const game = useGame((state) => state.game);
@@ -9,8 +9,8 @@ import GameQuitActions from "./GameQuitActions";
 const Game = () => {
   return (
     <>
-      <GameHeaderStatus />
-      <GameQuitActions />
+      <HeaderStatus />
+      <QuitActions />
     </>
   );
 };

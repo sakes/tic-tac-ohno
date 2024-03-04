@@ -85,7 +85,7 @@ const computeHeaderTextAndStyle = ({
   };
 };
 
-const GameHeaderStatus = () => {
+const HeaderStatus = () => {
   const userId = useSession((state) => state.user?.id);
   const { playerTwoId, nextPlayerId, refreshPending, winnerUserId, completed } =
     useGame((state) => ({
@@ -122,4 +122,4 @@ const GameHeaderStatus = () => {
   );
 };
 
-export default GameHeaderStatus;
+export default HeaderStatus;
