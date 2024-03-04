@@ -2,13 +2,41 @@ import { useCallback, useMemo } from "react";
 import SOCKET from "../../../socket/socket";
 import useDashboard from "../../../state/dashboard";
 
+const computePercentComplete = (game) => {
+  if (!game) {
+    return "";
+  }
+
+  if (game?.completed) {
+    return "100%";
+  }
+
+  const cnt0 = (game?.board || []).reduce((acc, row) => {
+    const cnt = row.reduce((acc2, v) => {
+      if (v === 0) {
+        acc2 += 1;
+      }
+      return acc2;
+    }, 0);
+    return acc + cnt;
+  }, 0);
+
+  if (cnt0 > 0) {
+    return `${Math.floor(((9 - cnt0) / 9) * 100)}%`;
+  }
+
+  return "?";
+};
+
 const Row = ({ game }) => {
-  const isJoinable = useMemo(
-    () => game.player_one && !game.player_two && !game.complete,
+  const { gameId, isJoinable, percentComplete } = useMemo(
+    () => ({
+      isJoinable: game.player_one && !game.player_two && !game.complete,
+      gameId: game.id,
+      percentComplete: computePercentComplete(game),
+    }),
     [game]
   );
-
-  const gameId = useMemo(() => game.id, [game]);
 
   const handleJoinGame = useCallback(() => {
     SOCKET.joinGame(gameId);
@@ -23,7 +51,7 @@ const Row = ({ game }) => {
         {game.player_two || <div className="text-opacity-30">None</div>}
       </td>
       <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-        0%
+        {percentComplete}
       </td>
       <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
         {game.winner}
