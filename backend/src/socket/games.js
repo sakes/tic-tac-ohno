@@ -62,27 +62,23 @@ const attachGames = (io, socket, pool) => {
             console.log(gameId, userId);
 
             // DB Update Game Winner
-            console.log('get game');
             const game = await Games.get(pool, gameId);
+            console.log(`get game: `, game?.id);
             const players = [
                 game.owner_user_id, 
                 game.opponent_user_id
             ].filter(id => id); 
 
-            console.log('update winner');
             const winner = players.filter(id => id !== userId)[0] || null;
-            Games.updateWinner(pool, gameId, winner);
-
-            // Remove all users from game in frontend
-            console.log('Remove all users from game in frontend');
-            io.to(mkGameRoom(gameId)).emit(GAME.REFRESH, null);
+            console.log(`update winner: ${winner}`);
+            await Games.updateWinner(pool, gameId, winner);
 
             // Send Players to their next games if any
             await Promise.all(players.map((pId) => {
                 return (async () => {
                     console.log(`send {${pId}} to next game`);
                     const nextGame = await Games.getMyCurrentGame(pool, { id: pId });
-                    console.log(nextGame?.id);
+                    console.log(`next gameid: ${nextGame?.id}`);
                     io.to(mkUserRoom(pId)).emit(GAME.REFRESH, nextGame || null);
                 })();
             }))

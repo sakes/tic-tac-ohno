@@ -10,10 +10,8 @@ const Games = {
         return exists;
     },
 
-    get: async (pool, gameId, myUsername) => {
-        const script = gameId ? GAMES.GET : GAMES.GET_MY_CURRENT_GAME_BY_USERNAME;
-        const params = gameId ? [gameId] : [myUsername];
-        const res = await pool.query(script, params);
+    get: async (pool, gameId) => {
+        const res = await pool.query(GAMES.GET, [gameId]);
         const game = res.rows[0] || null;
         return game;
     },
