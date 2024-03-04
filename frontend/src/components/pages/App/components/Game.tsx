@@ -5,10 +5,17 @@ import SOCKET from "../../../../socket/socket";
 
 const Game = () => {
   const game = useGame((state) => state.game);
+
   const handleForfit = useCallback((e) => {
     e.preventDefault();
     SOCKET.forfitGame();
   }, []);
+
+  const handleForceComplete = useCallback((e) => {
+    e.preventDefault();
+    SOCKET.forceComplete();
+  }, []);
+
   return (
     <>
       <div>Game {game?.id}</div>
@@ -38,6 +45,32 @@ const Game = () => {
             dark:focus:ring-gray-600"
         >
           quit
+        </button>
+        <button
+          type="button"
+          onClick={handleForfit}
+          className="
+            inline-flex 
+            items-center 
+            gap-x-2 
+            text-sm 
+            font-semibold 
+            rounded-lg 
+            border 
+            border-transparent 
+            text-blue-600 
+            hover:text-blue-800 
+            hover:border-blue-700
+            disabled:opacity-50 
+            disabled:pointer-events-none 
+            dark:text-blue-500 
+            dark:hover:text-blue-400 
+            dark:hover:border-blue-300
+            dark:focus:outline-none 
+            dark:focus:ring-1 
+            dark:focus:ring-gray-600"
+        >
+          force complete
         </button>
       </td>
     </>

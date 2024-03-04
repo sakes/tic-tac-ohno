@@ -1029,6 +1029,11 @@ video {
   transition-duration: 300ms;
 }
 
+.hover\:border-blue-700:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(29 78 216 / var(--tw-border-opacity));
+}
+
 .hover\:border-orange-700:hover {
   --tw-border-opacity: 1;
   border-color: rgb(194 65 12 / var(--tw-border-opacity));
@@ -1209,6 +1214,11 @@ video {
   .dark\:text-white {
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
+  }
+
+  .dark\:hover\:border-blue-300:hover {
+    --tw-border-opacity: 1;
+    border-color: rgb(147 197 253 / var(--tw-border-opacity));
   }
 
   .dark\:hover\:border-orange-300:hover {

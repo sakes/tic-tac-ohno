@@ -109,6 +109,19 @@ class Socket {
         this.s.emit(ACTIONS.GAME.FORFIT, gameId, userId);
     }
 
+    forceComplete() {
+        this.throwErrorMissingSocket();
+        const userId = useSession.getState().user?.id;
+        const gameId = useGame.getState().game?.id;
+        if (!gameId) {
+            throw new Error('Socket Singleton Error: attempted to force complete a game but gameId is missing.')
+        }
+        if (!userId) {
+            throw new Error('Socket Singleton Error: attempted to force complete a game when no user is logged in.')
+        }
+        this.s.emit(ACTIONS.GAME.COMPLETE, gameId);
+    }
+
     // LEADERBOARD ACTIONS
     getLeaderboards() {
         this.throwErrorMissingSocket();

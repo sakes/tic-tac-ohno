@@ -73,6 +73,12 @@ const Games = {
         return true;
     },
 
+    forceComplete: async (pool, gameId) => {
+        const res = await pool.query(GAMES.UPDATE_COMPLETED, [gameId]);
+        console.log(JSON.stringify(res));
+        return true;
+    },
+
     /**
      * DELETE
      */

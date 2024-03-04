@@ -8,9 +8,9 @@ const GAME = {
     GET: 'GAME_GET_MY_GAME',
     CREATE: 'GAME_CREATE',
     JOIN: 'GAME_JOIN',
-    MOVE: 'GAME_MOVE',
+    MOVE: 'GAME_MOVE',  // todo
     FORFIT: 'GAME_FORFIT',
-    COMPLETE: 'GAME_COMPLETE',
+    COMPLETE: 'GAME_COMPLETE', // todo
     REFRESH: 'GAME_REFRESH'
 };
 
