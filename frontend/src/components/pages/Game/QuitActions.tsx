@@ -39,12 +39,13 @@ const QuitActions = () => {
             dark:focus:ring-1 
             dark:focus:ring-gray-600"
       >
-        quit
+        FORFIT
       </button>
       <button
         type="button"
         onClick={handleForceComplete}
         className="
+            hidden
             inline-flex 
             items-center 
             gap-x-2 
@@ -65,7 +66,7 @@ const QuitActions = () => {
             dark:focus:ring-1 
             dark:focus:ring-gray-600"
       >
-        force complete
+        FORCE
       </button>
     </div>
   );
