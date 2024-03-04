@@ -88,13 +88,15 @@ const computeHeaderTextAndStyle = ({
 const HeaderStatus = () => {
   const userId = useSession((state) => state.user?.id);
   const { playerTwoId, nextPlayerId, refreshPending, winnerUserId, completed } =
-    useGame((state) => ({
-      playerTwoId: state.game?.opponent_user_id || undefined,
-      nextPlayerId: state.selectNextPlayerId() || undefined,
-      refreshPending: state.game?.refreshPending || false,
-      winnerUserId: state.game?.winner_user_id || undefined,
-      completed: state.game?.completed || false,
-    }));
+    useGame((state) => {
+      return {
+        playerTwoId: state.game?.opponent_user_id || undefined,
+        nextPlayerId: state.selectNextPlayerId() || undefined,
+        refreshPending: state.game?.refreshPending || false,
+        winnerUserId: state.game?.winner_user_id || undefined,
+        completed: state.game?.completed || false,
+      };
+    });
 
   const { text, style } = computeHeaderTextAndStyle({
     userId,

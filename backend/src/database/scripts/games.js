@@ -207,8 +207,8 @@ const UPDATE_OPPONENT = `
 const UPDATE_BOARD = `
     UPDATE games
     SET board = $2,
-        winner_user_id = $3
-        completed = $4
+        winner_user_id = $3,
+        completed = $4,
         updated_date = now()
     WHERE id = $1
 `;

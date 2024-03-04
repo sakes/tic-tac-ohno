@@ -14,11 +14,10 @@ const CHAINS = [
 const isChainSuccess = (board, chain) => {
     const b = board;
     const c = chain;
-    return b[c[0][0]][c[0][1]] && 
-        (
-            b[c[0][0]][c[0][1]] === b[c[1][0]][c[1][1]] && 
-            b[c[1][0]][c[1][1]] === b[c[2][0]][c[2][1]]
-        ) 
+    const success = b[c[0][0]][c[0][1]] && (
+        b[c[0][0]][c[0][1]] === b[c[1][0]][c[1][1]] && b[c[1][0]][c[1][1]] === b[c[2][0]][c[2][1]]
+    );
+    return success ? b[c[0][0]][c[0][1]] : false;
 }
 
 const getWinner = (board) => {
@@ -56,7 +55,7 @@ const countVals = (board) => {
     return { cnt0, cntX, cntO };
 }
 
-const computeGameStatus = board => {
+const computeGameStatus = (board) => {
     const { cnt0, cntX, cntO } = countVals(board);
     const winner = getWinner(board);
 
@@ -64,7 +63,7 @@ const computeGameStatus = board => {
         return {
             nextPlayer: undefined,
             winner,
-            complete: false
+            complete: true
         }
     }
 
@@ -85,12 +84,42 @@ const computeGameStatus = board => {
 
 const move = (board, player, row, col) => {
     if (player !== 'X' && player !== 'O') throw new Error(`Game Logic Util move(): Invalid player character. Must be either X or O. Value passed in: ${player})`);
-    if (board[row][col] === 0) throw new Error(`Game Logic Util move(): Attempted to move to unavailable position. Row:${row} Col:${col} already contains ${board[row][col]}`);
+    if (board[row][col] !== 0) throw new Error(`Game Logic Util move(): Attempted to move to unavailable position. Row:${row} Col:${col} already contains ${board[row][col]}`);
 
     board[row][col] = player;
 }
 
+const computeNextPlayerId = (nextPlayerChar, ownerUserId, opponentUserId) => {
+    if (!ownerUserId || !opponentUserId) {
+        return undefined;
+    }
+
+    let nextPlayerId = undefined;
+    if (nextPlayerChar) {
+        nextPlayerId = nextPlayerChar === 'X' ? ownerUserId : opponentUserId;
+    }
+    return nextPlayerId
+}
+
+const computeWinnerPlayerId = (winnerPlayerChar, ownerUserId, opponentUserId) => {
+    console.log('COMPUTE WINNER PLAYER ID');
+    console.log(winnerPlayerChar, ownerUserId, opponentUserId);
+    if (!ownerUserId || !opponentUserId) {
+        return undefined;
+    }
+
+    let winnerUserId = undefined;
+    if (winnerPlayerChar) {
+        winnerUserId = winnerPlayerChar === 'X' ? ownerUserId : opponentUserId;
+    }
+    console.log(winnerUserId);
+    console.log('END: COMPUTE WINNER PLAYER ID');
+    return winnerUserId;
+}
+
 module.exports = {
     computeGameStatus,
-    move
+    move,
+    computeNextPlayerId,
+    computeWinnerPlayerId
 }

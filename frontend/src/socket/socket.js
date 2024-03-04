@@ -182,7 +182,11 @@ class Socket {
         this.s.on(ACTIONS.GAMES.LIST, (rows) => {
             useDashboard.getState().setGames(rows);
         })
-        this.s.on(ACTIONS.GAME.REFRESH, (game, nextPlayerId) => {
+        this.s.on(ACTIONS.GAME.REFRESH, (game, nextPlayerId, ...remainingArgs) => {
+            // console.log({
+            //     game, nextPlayerId, remainingArgs
+            // })
+            // debugger;
             useGame.getState().setState(game, nextPlayerId);
         });
     }

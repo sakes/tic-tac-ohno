@@ -1,7 +1,7 @@
 const { GAME, GAMES } = require('./actions');
 const Games = require('../database/games');
 const { mkGameRoom, mkUserRoom } = require('./util');
-const { move, computeGameStatus } = require('./game.logic.util');
+const { move, computeGameStatus, computeNextPlayerId, computeWinnerPlayerId } = require('./game.logic.util');
 
 const attachGames = (io, socket, pool) => {
 
@@ -20,6 +20,8 @@ const attachGames = (io, socket, pool) => {
             const gameRoom = mkGameRoom(gameId);
             const game = await Games.get(pool, gameId);
             socket.join(gameRoom);
+            console.log('join game room on create');
+            console.log(userId, gameRoom);
             io.to(gameRoom).emit(GAME.REFRESH, game);
 
             // UPDATE PUBLIC GAME LIST
@@ -35,9 +37,25 @@ const attachGames = (io, socket, pool) => {
         if (userId) {
             const gameRoom = mkGameRoom(gameId);
             await Games.updateOpponent(pool, gameId, userId);
-            const game = await Games.get(pool, gameId);
+            console.log('join game room on join');
             socket.join(gameRoom);
-            io.to(gameRoom).emit(GAME.REFRESH, game);
+            console.log(userId, gameRoom);
+
+            console.log('ATTEMPT TO UPDATE CLIENT GAME');
+            const game = await Games.get(pool, gameId);
+            const {
+                nextPlayer
+            } = computeGameStatus(game.board);
+            
+            // Determine player ids
+            let nextPlayerId = computeNextPlayerId(nextPlayer, game?.owner_user_id, game?.opponent_user_id);
+
+            io.to(gameRoom).emit(GAME.REFRESH, game, nextPlayerId);
+            console.log({
+                game,
+                nextPlayerId
+            })
+            console.log('UPDATE CLIENT GAME COMPLETE');
 
             // UPDATE PUBLIC GAME LIST
             const games = await Games.listOpenGames(pool, 20);
@@ -48,8 +66,14 @@ const attachGames = (io, socket, pool) => {
     // GET CURRENT GAME
     socket.on(GAME.GET, async (userId) => {
         if (userId) {
+            let nextPlayerId = undefined;
             const game = await Games.getMyCurrentGame(pool, { id: userId });
-            io.to(mkUserRoom(userId)).emit(GAME.REFRESH, game);
+            if (game) {
+                socket.join(mkGameRoom(game?.id));
+                nextPlayerChar = computeGameStatus(game.board).nextPlayer;
+                nextPlayerId = computeNextPlayerId(nextPlayerChar, game.owner_user_id, game.opponent_user_id);
+            }
+            io.to(mkUserRoom(userId)).emit(GAME.REFRESH, game, nextPlayerId);
         }
     });
 
@@ -79,9 +103,16 @@ const attachGames = (io, socket, pool) => {
             await Promise.all(players.map((pId) => {
                 return (async () => {
                     console.log(`send {${pId}} to next game`);
+                    let nextPlayerId;
                     const nextGame = await Games.getMyCurrentGame(pool, { id: pId });
+                    if (nextGame) {
+                        const {
+                            nextPlayer
+                        } = computeGameStatus(game.board);
+                        nextPlayerId = computeNextPlayerId(nextPlayer, owner_user_id, opponent_user_id);
+                    }
                     console.log(`next gameid: ${nextGame?.id}`);
-                    io.to(mkUserRoom(pId)).emit(GAME.REFRESH, nextGame || null);
+                    io.to(mkUserRoom(pId)).emit(GAME.REFRESH, nextGame || null, nextPlayerId);
                 })();
             }))
 
@@ -121,9 +152,16 @@ const attachGames = (io, socket, pool) => {
             await Promise.all(players.map((pId) => {
                 return (async () => {
                     console.log(`send {${pId}} to next game`);
+                    let nextPlayerId;
                     const nextGame = await Games.getMyCurrentGame(pool, { id: pId });
+                    if (nextGame) {
+                        const {
+                            nextPlayer
+                        } = computeGameStatus(game.board);
+                        nextPlayerId = computeNextPlayerId(nextPlayer, owner_user_id, opponent_user_id);
+                    }
                     console.log(`next gameid: ${nextGame?.id}`);
-                    io.to(mkUserRoom(pId)).emit(GAME.REFRESH, nextGame || null);
+                    io.to(mkUserRoom(pId)).emit(GAME.REFRESH, nextGame || null, nextPlayerId);
                 })();
             }))
 
@@ -165,21 +203,37 @@ const attachGames = (io, socket, pool) => {
             } = computeGameStatus(board);
             
             // Determine player ids
-            let nextPlayerId = undefined;
-            if (nextPlayer) {
-                nextPlayerId = nextPlayer === 'X' ? owner_user_id : opponent_user_id;
-            }
-            let winnerUserId = undefined;
-            if (winner) {
-                winnerUserId = winner === 'X' ? owner_user_id : opponent_user_id;
-            }
+            let nextPlayerId = computeNextPlayerId(nextPlayer, owner_user_id, opponent_user_id);
+            let winnerUserId = computeWinnerPlayerId(winner, owner_user_id, opponent_user_id);
 
             // Update Game State
-            await Games.updateBoard(gameId, board, winnerUserId, complete);
+            console.log('ATTEMPT TO UPDATE BOARD');
+            console.log({
+                boardDataType: typeof board,
+                gameId, 
+                board, 
+                winnerUserId: (winnerUserId || null), 
+                complete
+            })
+            await Games.updateBoard(pool, gameId, board, (winnerUserId || null), complete);
+            console.log('BOARD UPDATE COMPLETE');
 
             // Update active game in client for players
+            console.log('ATTEMPT TO UPDATE CLIENT GAME');
             const gameNext = await Games.get(pool, gameId);
-            io.to(mkGameRoom(gameId)).emit(GAME.REFRESH, gameNext, nextPlayerId)
+            console.log({
+                boardDataType: typeof gameNext?.board,
+                board: gameNext?.board,
+                boardRowType: typeof gameNext?.board[0],
+                gameNext: gameNext,
+                nextPlayerId
+            });
+            console.log('ok');
+            console.log('OK');
+            await io.to(mkGameRoom(gameId)).emit(GAME.REFRESH, gameNext, nextPlayerId);
+            console.log('OK');
+            console.log('ok');
+            console.log('UPDATE CLIENT GAME COMPLETE');
 
             // update global games list for all users
             const games = await Games.listOpenGames(pool, 20);
