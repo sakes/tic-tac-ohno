@@ -99,7 +99,7 @@ const attachGames = (io, socket, pool) => {
 
     // COMPLETE
     socket.on(GAME.COMPLETE, async(gameId) => {
-        if (userId) {
+        if (gameId) {
             console.log('*********')
             console.log('BEGIN COMPLETE')
             console.log('*********')
