@@ -7,8 +7,8 @@ const attachGames = (io, socket, pool) => {
     // LIST GAMES
     socket.on(GAMES.LIST, async (userId) => {
         if (userId) {
-            const data = await Games.list(pool);
-            io.to(mkUserRoom(userId)).emit(GAMES.LIST, data.rows);
+            const games = await Games.listOpenGames(pool, 20);
+            io.to(mkUserRoom(userId)).emit(GAMES.LIST, games);
         }
     });
 
@@ -22,7 +22,9 @@ const attachGames = (io, socket, pool) => {
             io.to(gameRoom).emit(GAME.REFRESH, game);
 
             // UPDATE PUBLIC GAME LIST
-            const games = await Games.list(pool, 20);
+            const games = await Games.listOpenGames(pool, 20);
+            console.log('post create: list games');
+            console.log(games);
             io.emit(GAMES.LIST, games);
         }
     });
@@ -37,10 +39,65 @@ const attachGames = (io, socket, pool) => {
             io.to(gameRoom).emit(GAME.REFRESH, game);
 
             // UPDATE PUBLIC GAME LIST
-            const games = await Games.list(pool, 20);
+            const games = await Games.listOpenGames(pool, 20);
             io.emit(GAMES.LIST, games);
         }
     });
+
+    // GET CURRENT GAME
+    socket.on(GAME.GET, async (userId) => {
+        if (userId) {
+            const game = await Games.getMyCurrentGame(pool, { id: userId });
+            io.to(mkUserRoom(userId)).emit(GAME.REFRESH, game);
+        }
+    });
+
+    // FORFIT GAME
+    socket.on(GAME.FORFIT, async(gameId, userId) => {
+        if (userId) {
+            console.log('*********')
+            console.log('BEGIN')
+            console.log('*********')
+
+            console.log(gameId, userId);
+
+            // DB Update Game Winner
+            console.log('get game');
+            const game = await Games.get(pool, gameId);
+            const players = [
+                game.owner_user_id, 
+                game.opponent_user_id
+            ].filter(id => id); 
+
+            console.log('update winner');
+            const winner = players.filter(id => id !== userId)[0] || null;
+            Games.updateWinner(pool, gameId, winner);
+
+            // Remove all users from game in frontend
+            console.log('Remove all users from game in frontend');
+            io.to(mkGameRoom(gameId)).emit(GAME.REFRESH, null);
+
+            // Send Players to their next games if any
+            await Promise.all(players.map((pId) => {
+                return (async () => {
+                    console.log(`send {${pId}} to next game`);
+                    const nextGame = await Games.getMyCurrentGame(pool, { id: pId });
+                    console.log(nextGame?.id);
+                    io.to(mkUserRoom(pId)).emit(GAME.REFRESH, nextGame || null);
+                })();
+            }))
+
+            // update global games list for all users
+            const games = await Games.listOpenGames(pool, 20);
+            io.emit(GAMES.LIST, games);
+
+
+            console.log('*********')
+            console.log('END')
+            console.log('*********')
+        }
+
+    })
 
 };
 

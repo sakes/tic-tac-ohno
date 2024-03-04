@@ -35,7 +35,49 @@ const GET = `
 `;
 
 const GET_MY_CURRENT_GAME = `
-    SELECT g.id, g.owner_user_id, g.opponent_user_id, g.moves, g.winner_user_id, g.completed
+    SELECT 
+        g.id, 
+        g.owner_user_id, 
+        owner.username as player_one, 
+        g.opponent_user_id, 
+        opponent.username as player_two, 
+        g.moves, 
+        g.winner_user_id, 
+        g.completed
+
+    FROM games g
+
+    INNER JOIN users owner
+    ON (g.owner_user_id = owner.id)
+
+    LEFT OUTER JOIN users opponent
+    ON (
+        g.opponent_user_id IS NOT NULL 
+        AND 
+        g.opponent_user_id = opponent.id
+    )
+
+    WHERE
+        g.completed = false
+        AND g.winner_user_id IS NULL        
+        AND ( 
+            g.owner_user_id = $1
+            OR g.opponent_user_id = $1
+        )
+    LIMIT 1;
+`;
+
+const GET_MY_CURRENT_GAME_BY_USERNAME = `
+    SELECT 
+        g.id, 
+        g.owner_user_id, 
+        owner.username as player_one, 
+        g.opponent_user_id, 
+        opponent.username as player_two, 
+        g.moves, 
+        g.winner_user_id, 
+        g.completed
+
     FROM games g
 
     INNER JOIN users owner
@@ -54,7 +96,7 @@ const GET_MY_CURRENT_GAME = `
         AND ( 
             owner.username = $1
             OR opponent.username = $1
-        );
+        )
     LIMIT 1;
 `;
 
@@ -68,7 +110,7 @@ const LIST = `
         w.username as winner, 
         g.completed
 
-    FROM games us
+    FROM games g
 
     INNER JOIN users p1
     ON (g.owner_user_id = p1.id)
@@ -87,7 +129,7 @@ const LIST = `
         g.winner_user_id = w.id
     )
 
-    ORDER BY us.created_date DESC
+    ORDER BY g.created_date DESC
 `;
 
 const LIST_W_LIMIT = `
@@ -99,21 +141,34 @@ const LIST_OPEN_GAMES = `
     SELECT 
         g.id, 
         p1.username as player_one, 
-        null as player_two, 
+        p2.username as player_two, 
         g.opponent_user_id, 
         g.moves, 
-        null as winner, 
+        w.username as winner, 
         g.completed
 
-    FROM games us
+    FROM games g
 
     INNER JOIN users p1
     ON (g.owner_user_id = p1.id)
 
-    WHERE g.opponent_user_id IS NULL
-    AND g.winner_user_id IS NULL
+    LEFT OUTER JOIN users p2
+    ON (
+        g.opponent_user_id IS NOT NULL 
+        AND 
+        g.opponent_user_id = p2.id
+    )
+
+    LEFT OUTER JOIN users w
+    ON (
+        g.winner_user_id IS NOT NULL 
+        AND 
+        g.winner_user_id = w.id
+    )
+
+    WHERE g.winner_user_id IS NULL
     AND g.completed = false
-    ORDER BY us.wins DESC
+    ORDER BY g.created_date DESC
 `;
 
 const LIST_OPEN_GAMES_W_LIMIT = `
@@ -158,7 +213,7 @@ const UPDATE_MOVES = `
 
 const UPDATE_WINNER = `
     UPDATE games
-    SET moves = $2,
+    SET winner_user_id = $2,
         completed = true,
         updated_date = now()
     WHERE id = $1
@@ -186,6 +241,7 @@ module.exports = {
     EXISTS,
     GET,
     GET_MY_CURRENT_GAME,
+    GET_MY_CURRENT_GAME_BY_USERNAME,
 
     LIST,
     LIST_W_LIMIT,

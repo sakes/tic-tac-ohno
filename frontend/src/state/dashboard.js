@@ -6,7 +6,7 @@ const useDashboard = create()((set, get) => ({
     games: [],
     setUserSummary: (userSummary) => set(() => ({ userSummary })),
     setLeaderboards: (leaderboards) => set(() => ({ leaderboards })),
-    setGames: (games) => set(()=>{ games}),
+    setGames: (games) => set(()=>({ games: games || [] })),
 }));
 
 export default useDashboard;

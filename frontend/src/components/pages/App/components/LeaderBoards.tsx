@@ -36,7 +36,7 @@ const Row = ({ idx, userSummary }) => {
 };
 
 const LeaderBoards = () => {
-  const leaderboards = useDashboard((state) => state.leaderboards || []);
+  const leaderboards = useDashboard((state) => state?.leaderboards || []);
   return (
     <div className="hidden md:block">
       <h1 className=" text-purple-300 text-[2em] text-opacity-75 mb-5">

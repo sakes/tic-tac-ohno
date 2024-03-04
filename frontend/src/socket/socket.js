@@ -4,6 +4,7 @@ import urls from "../api/urls";
 import ACTIONS from './actions';
 import useSession from '../state/session';
 import useDashboard from "../state/dashboard";
+import useGame from "../state/game";
 
 class Socket {
     constructor() {
@@ -32,6 +33,8 @@ class Socket {
         this.registerUser();
         this.getUserSummary();
         this.getLeaderboards();    
+        this.getGames();
+        this.getGame();
     }
 
     throwErrorMissingSocket() {
@@ -90,9 +93,21 @@ class Socket {
         if (!userId) {
             throw new Error('Socket Singleton Error: attempted to join a game when no user is logged in.')
         }
-        this.s.emit(ACTIONS.GAME.JOIN, userId);
+        this.s.emit(ACTIONS.GAME.JOIN, gameId, userId);
     }
 
+    forfitGame() {
+        this.throwErrorMissingSocket();
+        const userId = useSession.getState().user?.id;
+        const gameId = useGame.getState().game?.id;
+        if (!gameId) {
+            throw new Error('Socket Singleton Error: attempted to forfit a game but gameId is missing.')
+        }
+        if (!userId) {
+            throw new Error('Socket Singleton Error: attempted to forfit a game when no user is logged in.')
+        }
+        this.s.emit(ACTIONS.GAME.FORFIT, gameId, userId);
+    }
 
     // LEADERBOARD ACTIONS
     getLeaderboards() {
@@ -102,6 +117,25 @@ class Socket {
             throw new Error('Socket Singleton Error: attempting to request leaderboard data without user id.')
         }
         this.s.emit(ACTIONS.LEADERBOARDS.LIST, userId);
+    }
+
+    // GAMES ACTIONS
+    getGames() {
+        this.throwErrorMissingSocket();
+        const userId = useSession.getState().user?.id;
+        if (!userId) {
+            throw new Error('Socket Singleton Error: attempting to request games data without user id.')
+        }
+        this.s.emit(ACTIONS.GAMES.LIST, userId);
+    }
+
+    getGame() {
+        this.throwErrorMissingSocket();
+        const userId = useSession.getState().user?.id;
+        if (!userId) {
+            throw new Error('Socket Singleton Error: attempting to request games data without user id.')
+        }
+        this.s.emit(ACTIONS.GAME.GET, userId);
     }
 
     // SOCKET EVENT HANDLERS
@@ -121,6 +155,9 @@ class Socket {
         this.s.on(ACTIONS.GAMES.LIST, (rows) => {
             useDashboard.getState().setGames(rows);
         })
+        this.s.on(ACTIONS.GAME.REFRESH, (game) => {
+            useGame.getState().setGame(game || undefined);
+        });
     }
 
     attachEvents() {

@@ -11,10 +11,10 @@ const Games = {
     },
 
     get: async (pool, gameId, myUsername) => {
-        const script = gameId ? GAMES.GET : GAMES.GET_MY_CURRENT_GAME;
+        const script = gameId ? GAMES.GET : GAMES.GET_MY_CURRENT_GAME_BY_USERNAME;
         const params = gameId ? [gameId] : [myUsername];
         const res = await pool.query(script, params);
-        const game = res.rows[0];
+        const game = res.rows[0] || null;
         return game;
     },
 
@@ -22,15 +22,23 @@ const Games = {
         const script = limit ? GAMES.LIST_W_LIMIT : GAMES.LIST;
         const params = limit ? [limit] : [];
         const res = await pool.query(script, params);
+        const games = res.rows;
+        return games;
+    },
+
+    listOpenGames: async (pool, limit = 10) => {
+        const script = limit ? GAMES.LIST_OPEN_GAMES_W_LIMIT: GAMES.LIST_OPEN_GAMES;
+        const params = limit ? [limit] : [];
+        const res = await pool.query(script, params);
         const game = res.rows;
         return game;
     },
 
-    listOpenGames: async (pool, limit = 10) => {
-        const script = limit ? GAMES.LIST_OPEN_GAMES : GAMES.LIST_OPEN_GAMES_W_LIMIT;
-        const params = limit ? [limit] : [];
+    getMyCurrentGame: async (pool, { id, username}) => {
+        const script = id ? GAMES.GET_MY_CURRENT_GAME : GAMES.GET_MY_CURRENT_GAME_BY_USERNAME;
+        const params = id ? [id] : [username];
         const res = await pool.query(script, params);
-        const game = res.rows;
+        const game = res.rows[0] || null;
         return game;
     },
 

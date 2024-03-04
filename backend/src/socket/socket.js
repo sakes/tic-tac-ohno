@@ -17,7 +17,7 @@ const createWsServer = () => {
     const server = http.createServer(app);
     const io = new Server(server, {
         cors: {
-          origins: ["http://192.168.58.120:8080", "http://localhost:8080"], 
+          origins: ["http://192.168.1.250:8080", "http://localhost:8080"], 
           methods: ["GET", "POST"]
         }
       });

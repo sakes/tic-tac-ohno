@@ -5,6 +5,7 @@ const USER = {
 }
 
 const GAME = {
+    GET: 'GAME_GET_MY_GAME',
     CREATE: 'GAME_CREATE',
     JOIN: 'GAME_JOIN',
     MOVE: 'GAME_MOVE',
