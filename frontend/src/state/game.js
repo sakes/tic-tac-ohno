@@ -4,10 +4,18 @@ const useGame = create()((set, get) => ({
     // props
     game: undefined,
     nextPlayerId: undefined,
+    refreshPending: false,
 
     // ac
     setGame: (game) => set(() => ({ game })),
-    setState: (game, nextPlayerId) => set(() => ({ game: (game || undefined), nextPlayerId: (nextPlayerId || undefined) })),
+    setRefeshPending: (refreshPending) => set(() => ({ refreshPending: refreshPending || false })),
+    setState: (game, nextPlayerId, refreshPending) => set(() => (
+        { 
+            game: (game || undefined), 
+            nextPlayerId: (nextPlayerId || undefined), 
+            refreshPending: (refreshPending || false) 
+        }
+    )),
     clear: () => set(() => ({ game: undefined, nextPlayerId: undefined})),
 
     // selectors
