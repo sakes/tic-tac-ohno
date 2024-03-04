@@ -151,6 +151,20 @@ class Socket {
         this.s.emit(ACTIONS.GAME.GET, userId);
     }
 
+    gameMove(row, col) {
+        this.throwErrorMissingSocket();
+        const userId = useSession.getState().user?.id;
+        const gameId = useGame.getState().game?.id;
+        if (!gameId) {
+            throw new Error('Socket Singleton Error: attempted to make a move in game but gameId is missing.')
+        }
+        if (!userId) {
+            throw new Error('Socket Singleton Error: attempted to make a move in game when no user is logged in.')
+        }
+        this.s.emit(ACTIONS.GAME.MOVE, gameId, userId, row, col);
+    }
+
+
     // SOCKET EVENT HANDLERS
     attachUserEvents() {
         this.s.on(ACTIONS.USER.GET_SUMMARY, (summary) => {
@@ -168,8 +182,8 @@ class Socket {
         this.s.on(ACTIONS.GAMES.LIST, (rows) => {
             useDashboard.getState().setGames(rows);
         })
-        this.s.on(ACTIONS.GAME.REFRESH, (game) => {
-            useGame.getState().setGame(game || undefined);
+        this.s.on(ACTIONS.GAME.REFRESH, (game, nextPlayerId) => {
+            useGame.getState().setState(game, nextPlayerId);
         });
     }
 

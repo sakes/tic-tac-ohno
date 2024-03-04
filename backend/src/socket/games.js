@@ -1,6 +1,7 @@
 const { GAME, GAMES } = require('./actions');
 const Games = require('../database/games');
 const { mkGameRoom, mkUserRoom } = require('./util');
+const { move, computeGameStatus } = require('./game.logic.util');
 
 const attachGames = (io, socket, pool) => {
 
@@ -56,7 +57,7 @@ const attachGames = (io, socket, pool) => {
     socket.on(GAME.FORFIT, async(gameId, userId) => {
         if (userId) {
             console.log('*********')
-            console.log('BEGIN')
+            console.log('BEGIN FORFIT')
             console.log('*********')
 
             console.log(gameId, userId);
@@ -90,18 +91,17 @@ const attachGames = (io, socket, pool) => {
 
 
             console.log('*********')
-            console.log('END')
+            console.log('END FORFIT')
             console.log('*********')
         }
-
-    })
+    });
 
 
     // COMPLETE
     socket.on(GAME.COMPLETE, async(gameId) => {
         if (userId) {
             console.log('*********')
-            console.log('BEGIN')
+            console.log('BEGIN COMPLETE')
             console.log('*********')
 
             console.log(gameId);
@@ -133,12 +133,64 @@ const attachGames = (io, socket, pool) => {
 
 
             console.log('*********')
+            console.log('END COMPLETE')
+            console.log('*********')
+        }
+    });
+
+
+    // MOVE
+    socket.on(GAME.MOVE, async(gameId, userId, row, col) => {
+        if (userId) {
+            console.log('*********')
+            console.log('BEGIN MOVE')
+            console.log('*********')
+
+            console.log(gameId);
+
+            // GET Game
+            const game = await Games.get(pool, gameId);
+            const { id, board, owner_user_id, opponent_user_id } = game || {};
+            if (!id) throw new Error(`Socket GAME.MOVE: Game not found. gameId: ${gameId}`);
+            console.log(`get game: `, id);
+            const player = userId === owner_user_id ? 'X' : 'O';
+
+
+            // move
+            move(board, player, row, col);
+            const {
+                nextPlayer,
+                winner,
+                complete
+            } = computeGameStatus(board);
+            
+            // Determine player ids
+            let nextPlayerId = undefined;
+            if (nextPlayer) {
+                nextPlayerId = nextPlayer === 'X' ? owner_user_id : opponent_user_id;
+            }
+            let winnerUserId = undefined;
+            if (winner) {
+                winnerUserId = winner === 'X' ? owner_user_id : opponent_user_id;
+            }
+
+            // Update Game State
+            await Games.updateBoard(gameId, board, winnerUserId, complete);
+
+            // Update active game in client for players
+            const gameNext = await Games.get(pool, gameId);
+            io.to(mkGameRoom(gameId)).emit(GAME.REFRESH, gameNext, nextPlayerId)
+
+            // update global games list for all users
+            const games = await Games.listOpenGames(pool, 20);
+            io.emit(GAMES.LIST, games);
+
+
+            console.log('*********')
             console.log('END')
             console.log('*********')
         }
-
-    })
-
+    });
 };
 
 module.exports = attachGames;

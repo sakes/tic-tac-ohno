@@ -1,6 +1,6 @@
 import LeaderBoards from "./LeaderBoards";
 import UserSummary from "./UserSummary";
-import Games from "./Games/Games";
+import Games from "./Games";
 
 function Dashboard() {
   return (

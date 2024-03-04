@@ -2,8 +2,8 @@ import { useEffect } from "react";
 
 import AppHeader from "../AppHeader";
 import AppBody from "../AppBody";
-import Dashboard from "./components/Dashboard";
-import Game from "./components/Game";
+import Dashboard from "../Dashboard/Dashboard";
+import Game from "../Game/Game";
 
 import SOCKET from "../../../socket/socket";
 import useGame from "../../../state/game";

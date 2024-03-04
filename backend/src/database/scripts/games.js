@@ -204,9 +204,11 @@ const UPDATE_OPPONENT = `
     WHERE id = $1
 `;
 
-const UPDATE_MOVES = `
+const UPDATE_BOARD = `
     UPDATE games
     SET board = $2,
+        winner_user_id = $3
+        completed = $4
         updated_date = now()
     WHERE id = $1
 `;
@@ -251,7 +253,7 @@ module.exports = {
     INSERT,
     UPDATE,
     UPDATE_OPPONENT,
-    UPDATE_MOVES,
+    UPDATE_BOARD,
     UPDATE_WINNER,
     UPDATE_COMPLETED,
 

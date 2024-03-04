@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
-import SOCKET from "../../../../../socket/socket";
-import useDashboard from "../../../../../state/dashboard";
+import SOCKET from "../../../socket/socket";
+import useDashboard from "../../../state/dashboard";
 
 const Row = ({ game }) => {
   const isJoinable = useMemo(

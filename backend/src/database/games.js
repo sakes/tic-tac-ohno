@@ -61,8 +61,8 @@ const Games = {
         return true;
     },
 
-    updateMoves: async (pool, gameId, board) => {
-        const res = await pool.query(GAMES.UPDATE_MOVES, [gameId, board]);
+    updateBoard: async (pool, gameId, board, winnerUserId, complete) => {
+        const res = await pool.query(GAMES.UPDATE_BOARD, [gameId, board, (winnerUserId || null), (complete || false)]);
         console.log(JSON.stringify(res));
         return true;
     },

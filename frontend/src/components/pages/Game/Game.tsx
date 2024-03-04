@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import useGame from "../../../../state/game";
-import SOCKET from "../../../../socket/socket";
+import useGame from "../../../state/game";
+import SOCKET from "../../../socket/socket";
 
 const Game = () => {
   const game = useGame((state) => state.game);

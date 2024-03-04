@@ -1,5 +1,5 @@
-import useDashboard from "../../../../state/dashboard";
-import useSession from "../../../../state/session";
+import useDashboard from "../../../state/dashboard";
+import useSession from "../../../state/session";
 
 const UserSummary = () => {
   const username = useSession((state) => state.user?.username);
@@ -15,7 +15,7 @@ const UserSummary = () => {
       <h1 className="text-center md:text-left text-blue-200 text-[2em] text-opacity-70">
         {username} Stats
       </h1>
-      <div className="text-center w-[400px] flex pr-10">
+      <div className="text-center w-[400px] flex mx-auto pr-0 lg:pr-10">
         <div className="flex-auto text-green-500 pr-10 py-10">
           <h1>{wins}</h1>
           <br />

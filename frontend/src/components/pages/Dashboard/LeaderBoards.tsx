@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import useDashboard from "../../../../state/dashboard";
+import useDashboard from "../../../state/dashboard";
 
 const Row = ({ idx, userSummary }) => {
   const lastSeen = useMemo(() => {
