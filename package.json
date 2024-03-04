@@ -1,0 +1,22 @@
+{
+  "name": "tic-tac-ohno",
+  "version": "1.0.0",
+  "description": "just a fun poc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "wait-on tcp:5432 && cd backend/ && npm run server",
+    "client": "wait-on tcp:3001 && echo \"client\" && cd frontend/ && npm run dev",
+    "tw:watch": "wait-on tcp:3001 && echo \"tw:watch\" && cd frontend/ && npm run tw:watch",
+    "database": "./sh/manage_tic_tac_pg.sh",
+    "dev": "concurrently \"npm:client\" \"npm:tw:watch\" \"npm:server\" \"npm:database\""
+  },
+  "keywords": [],
+  "author": "Will Barnes",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "vite": "^5.1.4",
+    "wait-on": "^7.2.0"
+  }
+}
