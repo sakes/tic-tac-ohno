@@ -49,8 +49,8 @@ const Games = {
         return res.rows[0].id;
     },
 
-    update: async (pool, gameId, ownerUserId, opponentUserId, moves, winnerUserId, completed) => {
-        const res = await pool.query(GAMES.UPDATE, [gameId, ownerUserId, opponentUserId, moves, winnerUserId, completed]);
+    update: async (pool, gameId, ownerUserId, opponentUserId, board, winnerUserId, completed) => {
+        const res = await pool.query(GAMES.UPDATE, [gameId, ownerUserId, opponentUserId, board, winnerUserId, completed]);
         console.log(JSON.stringify(res));
         return true;
     },
@@ -61,8 +61,8 @@ const Games = {
         return true;
     },
 
-    updateMoves: async (pool, gameId, moves) => {
-        const res = await pool.query(GAMES.UPDATE_MOVES, [gameId, moves]);
+    updateMoves: async (pool, gameId, board) => {
+        const res = await pool.query(GAMES.UPDATE_MOVES, [gameId, board]);
         console.log(JSON.stringify(res));
         return true;
     },

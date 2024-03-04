@@ -110,7 +110,7 @@ const attachGames = (io, socket, pool) => {
             const game = await Games.get(pool, gameId);
             console.log(`get game: `, game?.id);
             const players = [
-                game.owner_user_id, 
+                game.owner_user_id,
                 game.opponent_user_id
             ].filter(id => id); 
 

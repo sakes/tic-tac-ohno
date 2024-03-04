@@ -28,7 +28,7 @@ const EXISTS = `
 `;
 
 const GET = `
-    SELECT g.id, g.owner_user_id, g.opponent_user_id, g.moves, g.winner_user_id, g.completed
+    SELECT g.id, g.owner_user_id, g.opponent_user_id, g.board, g.winner_user_id, g.completed
     FROM games g
     WHERE g.id = $1
     LIMIT 1;
@@ -41,7 +41,7 @@ const GET_MY_CURRENT_GAME = `
         owner.username as player_one, 
         g.opponent_user_id, 
         opponent.username as player_two, 
-        g.moves, 
+        g.board, 
         g.winner_user_id, 
         g.completed
 
@@ -74,7 +74,7 @@ const GET_MY_CURRENT_GAME_BY_USERNAME = `
         owner.username as player_one, 
         g.opponent_user_id, 
         opponent.username as player_two, 
-        g.moves, 
+        g.board, 
         g.winner_user_id, 
         g.completed
 
@@ -106,7 +106,7 @@ const LIST = `
         p1.username as player_one, 
         p2.username as player_two, 
         g.opponent_user_id, 
-        g.moves, 
+        g.board, 
         w.username as winner, 
         g.completed
 
@@ -143,7 +143,7 @@ const LIST_OPEN_GAMES = `
         p1.username as player_one, 
         p2.username as player_two, 
         g.opponent_user_id, 
-        g.moves, 
+        g.board, 
         w.username as winner, 
         g.completed
 
@@ -190,7 +190,7 @@ const UPDATE = `
     UPDATE games
     SET owner_user_id = $2,
         opponent_user_id = $3,
-        moves = $4,
+        board = $4,
         winner_user_id = $5,
         completed = $6,
         updated_date = now()
@@ -206,7 +206,7 @@ const UPDATE_OPPONENT = `
 
 const UPDATE_MOVES = `
     UPDATE games
-    SET moves = $2,
+    SET board = $2,
         updated_date = now()
     WHERE id = $1
 `;
