@@ -7,7 +7,7 @@ const EXISTS = `
         SELECT us.id
         FROM user_summary us
 
-        INNER JOIN user u
+        INNER JOIN users u
         ON (us.user_id = u.id)
 
         WHERE u.username = $1
@@ -25,7 +25,7 @@ const GET_BY_USERNAME = `
     SELECT us.id, us.user_id, us.wins, us.losses, us.ties
     FROM user_summary us
 
-    INNER JOIN user u
+    INNER JOIN users u
     ON (us.user_id = u.id)
 
     WHERE u.username = $1
@@ -80,7 +80,7 @@ const UPDATE_BY_USERNAME = `
         losses = $3,
         ties = $4,
         updated_date = now()
-    FROM user u
+    FROM users u
     WHERE us.user_id = u.id AND u.username = $1
 `;
 
@@ -97,7 +97,7 @@ const INC_WINS = `
 const INC_WINS_BY_USERNAME = `
     UPDATE user_summary us
     SET wins = wins + 1
-    FROM user u
+    FROM users u
     WHERE us.user_id = u.id AND u.username = $1
 `;
 
@@ -110,7 +110,7 @@ const INC_LOSSES = `
 const INC_LOSSES_BY_USERNAME = `
     UPDATE user_summary us
     SET losses = losses + 1
-    FROM user u
+    FROM users u
     WHERE us.user_id = u.id AND u.username = $1
 `;
 
@@ -123,7 +123,7 @@ const INC_TIES = `
 const INC_TIES_BY_USERNAME = `
     UPDATE user_summary us
     SET ties = ties + 1
-    FROM user u
+    FROM users u
     WHERE us.user_id = u.id AND u.username = $1
 `;
 
