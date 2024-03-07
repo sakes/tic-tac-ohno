@@ -13,20 +13,37 @@ const COLS = [0, 1, 2];
  * CELL
  */
 
-const Cell = ({ isMyTurn, row, idx }) => {
+const Cell = ({ isMyTurn, userId, row, idx }) => {
   const borderStyle = useMemo(() => computeBorderStyle(row, idx), [row, idx]);
 
-  const board = useGame((state) => state.game?.board);
+  const { board, owner_user_id, opponent_user_id } = useGame((state) => ({
+    board: state.game?.board,
+    owner_user_id: state.game?.owner_user_id,
+    opponent_user_id: state.game?.opponent_user_id,
+  }));
 
   const val = useMemo(() => {
     const _v = board[row][idx];
     return _v ? _v : "";
   }, [board, row, idx]);
 
-  const disablePointerEvents = useMemo(
-    () => (!isMyTurn ? " pointer-events-none " : " cursor-pointer "),
-    [isMyTurn]
-  );
+  const pointerEvents = useMemo(() => {
+    const isMySquare =
+      !!val &&
+      ((val === "X" && userId === owner_user_id) ||
+        (val === "O" && userId === opponent_user_id));
+    const isTheirSquare =
+      !!val &&
+      ((val === "X" && userId !== owner_user_id) ||
+        (val === "O" && userId !== opponent_user_id));
+    const bgColor = isMySquare
+      ? "bg-green-300"
+      : isTheirSquare
+      ? "bg-gray-700 text-white text-opacity-70"
+      : "";
+    const pEvents = !isMyTurn || val ? "pointer-events-none" : "cursor-pointer";
+    return ` ${bgColor} ${pEvents} `;
+  }, [isMyTurn, val, userId, owner_user_id, opponent_user_id]);
 
   const move = useCallback(
     (e) => {
@@ -40,7 +57,7 @@ const Cell = ({ isMyTurn, row, idx }) => {
     <button
       type="button"
       onClick={move}
-      className={`flex-none w-[100px] h-[100px] flex justify-center bg-white text-black border-0 border-black hover:bg-blue-300 ${borderStyle} ${disablePointerEvents}`}
+      className={`flex-none text-3xl w-[100px] h-[100px] flex justify-center bg-white text-black border-0 border-black hover:bg-blue-300 ${borderStyle} ${pointerEvents}`}
     >
       <div className="flex-none self-center ">{val}</div>
     </button>
@@ -51,11 +68,11 @@ const Cell = ({ isMyTurn, row, idx }) => {
  * ROW
  */
 
-const Row = ({ isMyTurn, idx }) => {
+const Row = ({ isMyTurn, userId, idx }) => {
   return (
     <div className="flex">
       {COLS.map((col) => (
-        <Cell isMyTurn={isMyTurn} row={idx} idx={col} />
+        <Cell isMyTurn={isMyTurn} userId={userId} row={idx} idx={col} />
       ))}
     </div>
   );
@@ -81,7 +98,7 @@ const Board = () => {
     <div className={`text-center ${currentPlayerStyle}`}>
       <div className="inline-block">
         {ROWS.map((row) => (
-          <Row idx={row} isMyTurn={isMyTurn} />
+          <Row idx={row} isMyTurn={isMyTurn} userId={userId} />
         ))}
       </div>
     </div>
